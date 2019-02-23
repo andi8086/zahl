@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+import sys
+
+sylsep = ""
+
 def convert_group(number):
 	ones_alone = ["mi", "bi", "tri", "quadri", "quinti", "sexti",
 			"septi", "okti", "noni"]
@@ -50,23 +54,26 @@ def convert_group(number):
 	if len(lead) == 1 or e == 0:
 		res = lead[0]
 	elif len(ones_combine[e-1]) == 1:
-		res = ones_combine[e-1][0] + "-" + lead[0]
+		res = ones_combine[e-1][0] + sylsep + lead[0]
 	else:
 		# several possibilities for z sylable, find matching e syl
 		ls = [[s[1:],t] for s in lead for t in ones_combine[e-1] if s[0] == t[-1]]
 
 		# no valid combination? take the first sylabels
 		if len(ls) == 0:
-			res = ones_combine[e-1][0] + "-" + lead[0]
+			res = ones_combine[e-1][0] + sylsep + lead[0]
 		else:
-			res = ls[0][1] + "-" + ls[0][0]
+			res = ls[0][1] + sylsep + ls[0][0]
 
 	if z != 0 and h != 0:
-			res = res + "-" + hundreds[h-1][0]
+			res = res + sylsep + hundreds[h-1][0]
 
 	return res
 	
 
+if len(sys.argv) > 1:
+	if any("-s" in t for t in sys.argv):
+		sylsep = "-"
 
 anzahl_nullen = input("Natürliche Anzahl Nullen?")
 
@@ -107,7 +114,7 @@ while len(m) > 0:
 		r = "ni"
 	else:
 		r = convert_group(p)[:-1] + "i"
-	numstr = r + "-" + "lli" + "-" + numstr
+	numstr = r + sylsep + "lli" + sylsep + numstr
 
 s = (numstr[0].upper())
 numstr = s + numstr[1:]
