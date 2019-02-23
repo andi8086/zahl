@@ -51,7 +51,7 @@ def convert_group(number):
 			res = ones_combine[e-1][0] + "-" + tens[z-1][0]
 		else:
 			# several possibilities for z sylable, find matching e syl
-			zs = [[s,t[:-1]] for s in tens[z-1] for t in ones_combine[e-1] if s[0] == t[-1]]
+			zs = [[s[1:],t] for s in tens[z-1] for t in ones_combine[e-1] if s[0] == t[-1]]
 
 			# no valid combination? take the first sylabels
 			if len(zs) == 0:
@@ -70,7 +70,7 @@ def convert_group(number):
 		elif len(ones_combine[e-1]) == 1:
 			res = ones_combine[e-1][0] + "-" + hundreds[h-1][0]
 		else:
-			hs = [[s,t[:-1]] for s in hundreds[h-1] for t in ones_combine[e-1] if s[0] == t[-1]]
+			hs = [[s[1:],t] for s in hundreds[h-1] for t in ones_combine[e-1] if s[0] == t[-1]]
 			if len(hs) == 0:
 				res = ones_combine[e-1][0] + "-" + hundreds[h-1][0]
 			else:
@@ -89,33 +89,49 @@ try:
 except ValueError:
 	print("Das war keine natürliche Zahl! ")
 
-print("10^" + str(an) + "   ", end = '')
+print("10^" + anzahl_nullen + "   ", end = '')
 
 
-m = int(an / 6)
+m = str(int(an // 6))
 n = (an % 6) >= 3
 o = (an % 3)
 
-if m < 1:
+if int(m) == 0:
 	print("Das sollten wir auch ohne Programm lesen können!")
 	exit(0)
 
 if n == True:
-	print("Million ^ " + str(m) + ",5", end='')
+	print("Million ^ " + m + ",5", end='')
 else:
-	print("Million ^ " + str(m), end='')
+	print("Million ^ " + m, end='')
 
-numstr = convert_group(m)[:-1]
+numstr = ""
+
+while len(m) > 0:
+	if len(m) > 3:
+		p = int(m[-3:])
+		m = m[:-3]
+	else:
+		p = int(m)
+		m = ""
+	r = ""
+	if p == 0:
+		r = "ni" + "-"
+	else:
+		r = convert_group(p)[:-1] + "i"
+	numstr = r + "-" + "lli" + "-" + numstr
+
+
 
 s = (numstr[0].upper())
 numstr = s + numstr[1:]
 
 if n == False:
-	numstr = numstr + "illion"
+	numstr = numstr + "on"
 	if o > 0:
 		numstr = ["Zehn ", "Hundert "][o-1] + numstr + "en"
 else:
-	numstr = numstr + "illiarde"
+	numstr = numstr + "arde"
 	if o > 0:
 		numstr = ["Zehn ", "Hundert "][o-1] + numstr + "n"
 
